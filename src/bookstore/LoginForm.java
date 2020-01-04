@@ -1,11 +1,20 @@
 
 package bookstore;
 
+import java.sql.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class LoginForm extends javax.swing.JFrame {
 
     public LoginForm() {
         initComponents();
     }
+    
+    Connection con = null;
+        PreparedStatement stat1;
+        ResultSet rs;
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -53,6 +62,11 @@ public class LoginForm extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         jButton1.setText("Submit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setText("Seller Login");
@@ -193,6 +207,48 @@ public class LoginForm extends javax.swing.JFrame {
         new RegisterSell().setVisible(true);
            dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFrame f = new JFrame();
+        if (!jTextField1.getText().equals("") && !jPasswordField1.getText().equals("")) {
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                con = DriverManager.getConnection(url);
+                
+                stat1 = con.prepareStatement("Select Pass from Customer where Username = ?");
+                stat1.setString(1, jTextField1.getText());
+                rs = stat1.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString(1).equals(jPasswordField1.getText())) {
+                        JOptionPane.showMessageDialog(f,
+                                "Login Successfull",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        new MainPage(jTextField1.getText()).setVisible(true);
+                        dispose();
+                        
+                    }else{
+                        JOptionPane.showMessageDialog(f,
+                            "Incorrect Password !!!",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(f,
+                            "User does not exist !!!",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception m) {
+                
+            }
+        } else {
+            JOptionPane.showMessageDialog(f,
+                            "One or two fields is empty",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

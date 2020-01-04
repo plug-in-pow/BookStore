@@ -5,10 +5,11 @@
  */
 package bookstore;
 
-/**
- *
- * @author Shalini
- */
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.util.regex.*;
+import java.sql.*;
+
 public class RegisterSell extends javax.swing.JFrame {
 
     /**
@@ -17,7 +18,9 @@ public class RegisterSell extends javax.swing.JFrame {
     public RegisterSell() {
         initComponents();
     }
-
+    Connection con = null;
+        PreparedStatement stat1;
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,7 +30,6 @@ public class RegisterSell extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -50,17 +52,10 @@ public class RegisterSell extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jLabel11 = new javax.swing.JLabel();
         jPasswordField2 = new javax.swing.JPasswordField();
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,7 +63,15 @@ public class RegisterSell extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bookstore/images/SellerRegisterLogo.PNG"))); // NOI18N
 
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Register");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("Register as Seller");
@@ -105,6 +108,22 @@ public class RegisterSell extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         jLabel11.setText("Confirm Password");
 
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jLabel12.setText("( min - 5 characters , max - 12 characters )");
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jLabel13.setText("( min - 5 characters , max - 12 characters )");
+
+        jLabel14.setText("( max 120 words )");
+
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -115,10 +134,19 @@ public class RegisterSell extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel14))
                             .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13))
                             .addComponent(jLabel11)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
@@ -141,7 +169,9 @@ public class RegisterSell extends javax.swing.JFrame {
                                     .addComponent(jComboBox1, 0, 129, Short.MAX_VALUE))))
                         .addContainerGap(44, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
+                        .addGap(83, 83, 83)
+                        .addComponent(jButton2)
+                        .addGap(35, 35, 35)
                         .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -156,7 +186,9 @@ public class RegisterSell extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel14))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -173,11 +205,15 @@ public class RegisterSell extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel12))
                 .addGap(18, 18, 18)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel13))
                 .addGap(18, 18, 18)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -185,7 +221,9 @@ public class RegisterSell extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(20, 20, 20))
         );
 
@@ -202,6 +240,101 @@ public class RegisterSell extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFrame f = new JFrame();
+        String name = jTextField1.getText();
+        String address = jTextArea1.getText();
+        String phoneno = jTextField2.getText();
+        String gender = String.valueOf(jComboBox1.getSelectedItem());
+        String email = jTextField3.getText();
+        String username = jTextField4.getText();
+        String password = jPasswordField1.getText();
+
+        Pattern p = Pattern.compile("[7-9][0-9]{9}");
+        Matcher m = p.matcher(phoneno);
+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+                + "[a-zA-Z0-9_+&*-]+)*@"
+                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+                + "A-Z]{2,7}$";
+        Pattern pat = Pattern.compile(emailRegex);
+
+        /// check if any field is empty
+        if (name.isEmpty() || address.isEmpty() || phoneno.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+
+            JOptionPane.showMessageDialog(f,
+                    "One or more field is empty. All fields are mandatory.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else if (address.length() > 120) {
+
+            JOptionPane.showMessageDialog(f,
+                    "Address field should be less than 120 characters",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else if (!(m.find() && m.group().equals(phoneno))) {
+
+            JOptionPane.showMessageDialog(f,
+                    "Incorrect Phone Number. Phone Number should be exactly 10 digit.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else if (!(pat.matcher(email).matches())) {
+            JOptionPane.showMessageDialog(f,
+                    "Incorrect Email Address",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else if (username.length() < 5 && username.length() > 12) {
+            JOptionPane.showMessageDialog(f,
+                    "Username should have minimum 5 characters and maximum of 12 characters.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else if (password.length() < 5 && password.length() > 12) {
+            JOptionPane.showMessageDialog(f,
+                    "Password should have minimum 5 characters and maximum of 12 characters.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else if (!password.equals(jPasswordField2.getText())) {
+            JOptionPane.showMessageDialog(f,
+                    "Password entered does not match with the confirm password field",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            try{
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            con = DriverManager.getConnection(url);
+            stat1 = con.prepareStatement("insert into Customer (Name,Addr,Mob_no,Gender,Email_id,Username,Pass) values(?,?,?,?,?,?,?)");
+            stat1.setString(1, name);
+            stat1.setString(2, address);
+            stat1.setString(3, phoneno);
+            stat1.setString(4, gender);
+            stat1.setString(5, email);
+            stat1.setString(6, username);
+            stat1.setString(7, password);
+            stat1.executeUpdate();
+            
+            JOptionPane.showMessageDialog(f,
+                    "Registration Successfull",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+            new LoginForm().setVisible(true);
+            dispose();                  
+            
+            }catch(Exception mes){
+                JOptionPane.showMessageDialog(f,
+                    "Registration Unsuccessfull",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+                System.out.println(mes.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       new LoginForm().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,10 +373,14 @@ public class RegisterSell extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -253,7 +390,6 @@ public class RegisterSell extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JScrollPane jScrollPane1;

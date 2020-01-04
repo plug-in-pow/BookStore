@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.util.regex.*;
 import java.sql.*;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -20,13 +21,12 @@ public class RegisterCustomer extends javax.swing.JFrame {
      * Creates new form RegisterCustomer
      */
     public RegisterCustomer() {
-        
         initComponents();
     }
     
     Connection con = null;
-        PreparedStatement stat1, stat2;
-        ResultSet rs1;
+        PreparedStatement stat1,stat2;
+        ResultSet rs;
         String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
 
     /**
@@ -38,7 +38,6 @@ public class RegisterCustomer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -62,8 +61,9 @@ public class RegisterCustomer extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jPasswordField2 = new javax.swing.JPasswordField();
         jButton3 = new javax.swing.JButton();
-
-        jButton2.setText("jButton2");
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +134,13 @@ public class RegisterCustomer extends javax.swing.JFrame {
             }
         });
 
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel12.setText("( max 120 words )");
+
+        jLabel13.setText("( min - 5 characters , max - 12 characters )");
+
+        jLabel14.setText("( min - 5 characters , max - 12 characters )");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -148,13 +155,22 @@ public class RegisterCustomer extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel6)
-                                .addComponent(jLabel7)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel14))
                                 .addComponent(jTextField1)
-                                .addComponent(jLabel4)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel12))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                                 .addComponent(jTextField4)
                                 .addComponent(jTextField5)
-                                .addComponent(jLabel8)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel8)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel13))
                                 .addComponent(jLabel9)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,7 +206,9 @@ public class RegisterCustomer extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel12))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -207,11 +225,15 @@ public class RegisterCustomer extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel14))
                 .addGap(18, 18, 18)
                 .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel13))
                 .addGap(18, 18, 18)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -271,7 +293,6 @@ public class RegisterCustomer extends javax.swing.JFrame {
                 + "A-Z]{2,7}$";
         Pattern pat = Pattern.compile(emailRegex);
 
-//        System.out.println(name + address + phoneno + gender + email + username + password);
         /// check if any field is empty
         if (name.isEmpty() || address.isEmpty() || phoneno.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
 
@@ -279,7 +300,13 @@ public class RegisterCustomer extends javax.swing.JFrame {
                     "One or more field is empty. All fields are mandatory.",
                     "Error",
                     JOptionPane.WARNING_MESSAGE);
-        } else if (!(m.find() && m.group().equals(phoneno))) {
+        }else if (address.length() > 120) {
+
+            JOptionPane.showMessageDialog(f,
+                    "Address field should be less than 120 characters",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else if (!(m.find() && m.group().equals(phoneno))) {
 
             JOptionPane.showMessageDialog(f,
                     "Incorrect Phone Number. Phone Number should be exactly 10 digit.",
@@ -290,9 +317,14 @@ public class RegisterCustomer extends javax.swing.JFrame {
                     "Incorrect Email Address",
                     "Error",
                     JOptionPane.WARNING_MESSAGE);
-        } else if (password.length() < 5) {
+        } else if (username.length() < 5 && username.length() > 12) {
             JOptionPane.showMessageDialog(f,
-                    "Password should have minimum 5 characters.",
+                    "Username should have minimum 5 characters and maximum of 12 characters.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else if (password.length() < 5 && password.length() > 12) {
+            JOptionPane.showMessageDialog(f,
+                    "Password should have minimum 5 characters and maximum of 12 characters.",
                     "Error",
                     JOptionPane.WARNING_MESSAGE);
         } else if (!password.equals(jPasswordField2.getText())) {
@@ -301,20 +333,50 @@ public class RegisterCustomer extends javax.swing.JFrame {
                     "Error",
                     JOptionPane.WARNING_MESSAGE);
         } else {
+            boolean fl = true;
             try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
-            stat1 = con.prepareStatement("insert into Customer values(?,?,?,?,?,?,?)");
-            stat1.setString(1, name);
-            stat1.setString(2, address);
-            stat1.setString(3, phoneno);
-            stat1.setString(4, gender);
-            stat1.setString(5, email);
-            stat1.setString(6, username);
-            stat1.setString(7, password);
-            rs1 = stat1.executeQuery();
-
+            
+            stat2 = con.prepareStatement("Select Username from Customer where Username = ?");
+            stat2.setString(1,username);
+            rs = stat2.executeQuery();
+            while(rs.next()){
+                if(rs.getString(1).equals(username)){
+                   fl = false; 
+                }
+            }
+                if (fl) {
+                    stat1 = con.prepareStatement("insert into Customer (Name,Addr,Mob_no,Gender,Email_id,Username,Pass) values(?,?,?,?,?,?,?)");
+                    stat1.setString(1, name);
+                    stat1.setString(2, address);
+                    stat1.setString(3, phoneno);
+                    stat1.setString(4, gender);
+                    stat1.setString(5, email);
+                    stat1.setString(6, username);
+                    stat1.setString(7, password);
+                    stat1.executeUpdate();
+                    
+                    JOptionPane.showMessageDialog(f,
+                            "Registration Successfull",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    
+                    new LoginForm().setVisible(true);
+                    dispose();                    
+                } else {
+                     JOptionPane.showMessageDialog(f,
+                            "User already exist !!!",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+              
+            
             }catch(Exception mes){
+                JOptionPane.showMessageDialog(f,
+                    "Registration Unsuccessfull",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
                 System.out.println(mes.getMessage());
             }
         }
@@ -354,15 +416,16 @@ public class RegisterCustomer extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

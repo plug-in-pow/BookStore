@@ -23,7 +23,7 @@ public class NewClass {
         p.put("mail.smtp.host","smtp.gmail.com");
         p.put("mail.smtp.port","587");
         
-        String myAcc = "tripathimayank36@gmail.com";
+        String myAcc = "mt281999@gmail.com";
         String password = "einsteinbst";
         
         Session session = Session.getInstance(p, new Authenticator() {
