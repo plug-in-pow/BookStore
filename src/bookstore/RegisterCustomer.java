@@ -25,9 +25,9 @@ public class RegisterCustomer extends javax.swing.JFrame {
     }
     
     Connection con = null;
-        PreparedStatement stat1,stat2;
-        ResultSet rs;
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
+    PreparedStatement stat1,stat2;
+    ResultSet rs;
+    String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -335,7 +335,7 @@ public class RegisterCustomer extends javax.swing.JFrame {
         } else {
             boolean fl = true;
             try{
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
             
             stat2 = con.prepareStatement("Select Username from Customer where Username = ?");

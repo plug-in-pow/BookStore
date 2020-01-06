@@ -1,4 +1,3 @@
-
 package bookstore;
 
 import java.sql.*;
@@ -10,11 +9,11 @@ public class LoginForm extends javax.swing.JFrame {
     public LoginForm() {
         initComponents();
     }
-    
+
     Connection con = null;
-        PreparedStatement stat1;
-        ResultSet rs;
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
+    PreparedStatement stat1;
+    ResultSet rs;
+    String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -85,6 +84,11 @@ public class LoginForm extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         jButton2.setText("Submit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(255, 51, 51));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
@@ -200,12 +204,12 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         new RegisterCustomer().setVisible(true);
-           dispose();   
+        dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         new RegisterSell().setVisible(true);
-           dispose();
+        dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -214,7 +218,7 @@ public class LoginForm extends javax.swing.JFrame {
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 con = DriverManager.getConnection(url);
-                
+
                 stat1 = con.prepareStatement("Select Pass from Customer where Username = ?");
                 stat1.setString(1, jTextField1.getText());
                 rs = stat1.executeQuery();
@@ -226,12 +230,12 @@ public class LoginForm extends javax.swing.JFrame {
                                 JOptionPane.INFORMATION_MESSAGE);
                         new MainPage(jTextField1.getText()).setVisible(true);
                         dispose();
-                        
-                    }else{
+
+                    } else {
                         JOptionPane.showMessageDialog(f,
-                            "Incorrect Password !!!",
-                            "Error",
-                            JOptionPane.WARNING_MESSAGE);
+                                "Incorrect Password !!!",
+                                "Error",
+                                JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(f,
@@ -240,15 +244,58 @@ public class LoginForm extends javax.swing.JFrame {
                             JOptionPane.WARNING_MESSAGE);
                 }
             } catch (Exception m) {
-                
+
             }
         } else {
             JOptionPane.showMessageDialog(f,
-                            "One or two fields is empty",
-                            "Error",
-                            JOptionPane.WARNING_MESSAGE);
+                    "One or two fields is empty",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JFrame f = new JFrame();
+        if (!jTextField2.getText().equals("") && !jPasswordField2.getText().equals("")) {
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                con = DriverManager.getConnection(url);
+
+                stat1 = con.prepareStatement("Select Pass from Seller where Username = ?");
+                stat1.setString(1, jTextField2.getText());
+                rs = stat1.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString(1).equals(jPasswordField2.getText())) {
+                        JOptionPane.showMessageDialog(f,
+                                "Login Successfull",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
+//                        new SellerPage(jTextField1.getText()).setVisible(true);
+                        new SellerPage().setVisible(true);
+                        dispose();
+
+                    } else {
+                        JOptionPane.showMessageDialog(f,
+                                "Incorrect Password !!!",
+                                "Error",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(f,
+                            "User does not exist !!!",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception m) {
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(f,
+                    "One or two fields is empty",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

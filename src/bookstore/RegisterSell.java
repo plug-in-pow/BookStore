@@ -77,7 +77,7 @@ public class RegisterSell extends javax.swing.JFrame {
         jLabel2.setText("Register as Seller");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jLabel3.setText("Name");
+        jLabel3.setText("Your Company Name");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         jLabel4.setText("Shop Address");
@@ -303,7 +303,7 @@ public class RegisterSell extends javax.swing.JFrame {
             try{
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
-            stat1 = con.prepareStatement("insert into Customer (Name,Addr,Mob_no,Gender,Email_id,Username,Pass) values(?,?,?,?,?,?,?)");
+            stat1 = con.prepareStatement("insert into Seller (Compnay_name,Addr,Mob_no,Gender,Email_id,Username,Pass) values(?,?,?,?,?,?,?)");
             stat1.setString(1, name);
             stat1.setString(2, address);
             stat1.setString(3, phoneno);
