@@ -17,19 +17,22 @@ public class ProductDetails extends javax.swing.JFrame {
     /**
      * Creates new form ProductDetails
      */
-    
+    String product = null ,username = null;
     Connection con = null;
     PreparedStatement stat1, stat2;
     ResultSet rs1;
     String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
     
-    public ProductDetails(String username) {
+    public ProductDetails(String p,String u) {
+        product = p;
+        username = u;
         initComponents();
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
-            stat1 = con.prepareStatement("select * from Product where product_name = ?");
-            stat1.setString(1, username);
+            stat1 = con.prepareStatement("select * from Product where product_name = ? AND seller_name = ?");
+            stat1.setString(1, product);
+            stat1.setString(2, username);
             rs1 = stat1.executeQuery();
             byte[] im = null;
             while(rs1.next()){

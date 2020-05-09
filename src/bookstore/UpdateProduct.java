@@ -5,13 +5,17 @@
  */
 package bookstore;
 
+import com.microsoft.sqlserver.jdbc.StringUtils;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
 import java.sql.*;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -29,16 +33,20 @@ public class UpdateProduct extends javax.swing.JFrame {
     PreparedStatement stat1, stat2;
     ResultSet rs1;
     String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
-    String user = null;
+    String user = null , product = null;
+    String path = null;
+    FileInputStream imageInputStream = null;
 
-    public UpdateProduct(String username) {
+    public UpdateProduct(String product_name,String username) {
         initComponents();
         user = username;
+        product = product_name;
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
-            stat1 = con.prepareStatement("select * from Product where product_name = ?");
-            stat1.setString(1, username);
+            stat1 = con.prepareStatement("select * from Product where product_name = ? AND seller_name = ?");
+            stat1.setString(1, product);
+            stat1.setString(2, user);
             rs1 = stat1.executeQuery();
             byte[] im = null;
             while (rs1.next()) {
@@ -138,8 +146,6 @@ public class UpdateProduct extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("jLabel2");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -212,7 +218,7 @@ public class UpdateProduct extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
-                        .addContainerGap(55, Short.MAX_VALUE))))
+                        .addContainerGap(69, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -230,35 +236,66 @@ public class UpdateProduct extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
+        JFrame f = new JFrame();
+        String product_name = jTextField1.getText();
+        String description = jTextArea1.getText();
+        String price = jTextField2.getText();
+        String stock = jTextField3.getText();
+        if (product_name.isEmpty() || description.isEmpty() || price.isEmpty() || stock.isEmpty()) {
+            JOptionPane.showMessageDialog(f,
+                    "One or more field is empty. All fields are mandatory.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }  else if (description.length() > 128) {
+            JOptionPane.showMessageDialog(f,
+                    "Desciption field should be less than 120 characters",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else if (!StringUtils.isNumeric(price)) {
+            JOptionPane.showMessageDialog(f,
+                    "Price should be in digits",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        } else if (!StringUtils.isNumeric(stock)) {
+            JOptionPane.showMessageDialog(f,
+                    "Stock should be in digits",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }else {
+            try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url);
+            
             stat1 = con.prepareStatement("UPDATE Product\n"
-                    + "SET product_name = ?, describe = ?, price = ? , stock = ?,product_image = ?\n"
-                    + "WHERE product_name = ?;");
+                    + "SET product_name = ?, describe = ?, price = ? , stock = ?\n"
+                    + "WHERE product_name = ? AND seller_name = ?;");
             stat1.setString(1, jTextField1.getText());
             stat1.setString(2, jTextArea1.getText());
             stat1.setString(3, jTextField2.getText());
             stat1.setString(4, jTextField3.getText());
-            stat1.setString(5, jTextField1.getText());
+            stat1.setString(5, product);
             stat1.setString(6, user);
-            rs1 = stat1.executeQuery();
-//            byte[] im = null;
-//            while (rs1.next()) {
-//                jTextField1.setText(rs1.getString(2));
-//                jTextArea1.setText(rs1.getString(3));
-//                jTextField2.setText(rs1.getString(4));
-//                jTextField3.setText(rs1.getString(5));
-//
-//                im = rs1.getBytes(6);
-//                Image img = Toolkit.getDefaultToolkit().createImage(im);
-//                Image newImg = img.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), Image.SCALE_SMOOTH);
-//                ImageIcon ic = new ImageIcon(newImg);
-//                jLabel1.setIcon(ic);
-//            }
+            stat1.execute();
+            
+            if(path != null){
+                imageInputStream = new FileInputStream(new File(path));
+                stat2 = con.prepareStatement("UPDATE Product\n"
+                    + "SET product_image = ?\n"
+                    + "WHERE product_name = ? AND seller_name = ?;");
+            stat2.setBinaryStream(1, imageInputStream);
+            stat1.setString(2, product);
+            stat2.setString(3, user);
+            stat2.execute();
+            }
+            JOptionPane.showMessageDialog(f,
+                    "Updated Successfully !!!.",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception m) {
             System.out.println(m.getMessage());
         }
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -272,8 +309,13 @@ public class UpdateProduct extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = c.getSelectedFile();
             String filename = file.getName();
-            String path = file.getAbsolutePath();
-            jLabel2.setText(filename);}
+            path = file.getAbsolutePath();
+            Image img = Toolkit.getDefaultToolkit().createImage(path);
+            Image newImg = img.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon ic = new ImageIcon(newImg);
+            jLabel1.setIcon(ic);
+            jLabel2.setText(filename);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
