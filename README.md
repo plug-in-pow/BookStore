@@ -8,7 +8,7 @@ BookStore is desktop based app made by using <b>Java Swing</b>. It tries adapt a
     <li>Seller Registration.</li>
     <li>Adding a book to the store from the seller.</li>
     <li>Ordering a book from the store by the customer.</li>
-    <li>Mobile Confirmation message (not yet completed !!)</li>
+    <li>Email Confirmation message</li>
 </ol>
 
 ## Frontend
@@ -29,5 +29,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)

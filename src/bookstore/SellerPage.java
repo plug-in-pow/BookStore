@@ -934,32 +934,6 @@ public class SellerPage extends javax.swing.JFrame {
             String filename = file.getName();
             path = file.getAbsolutePath();
             jLabel16.setText(filename);
-//            try {
-//                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//                con = DriverManager.getConnection(url);
-//                imageInputStream = new FileInputStream(new File(path));
-//                stat1 = con.prepareStatement("insert into test values(?)");
-//                stat1.setBinaryStream(1, imageInputStream);
-//                stat1.execute();
-//
-//                stat2 = con.prepareStatement("select imag from test");
-//                rs = stat2.executeQuery();
-//                byte[] im = null;
-//                while (rs.next()) {
-//                    //get data of first column from result set
-//                    im = rs.getBytes(1);
-//                    System.out.println(im);
-//
-//                }
-//                Image img = Toolkit.getDefaultToolkit().createImage(im);
-////        ImageIcon icon = new ImageIcon(img);
-//                Image newImg = img.getScaledInstance(jLabel17.getWidth(), jLabel17.getHeight(), Image.SCALE_SMOOTH);
-//                ImageIcon image = new ImageIcon(newImg);
-//                jLabel17.setIcon(image);
-////            jLabel17.setIcon(ResizeImage(path,null));
-//            } catch (Exception ex) {
-//
-//            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

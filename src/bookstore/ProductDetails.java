@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package bookstore;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.*;
 import javax.swing.ImageIcon;
+
 /**
  *
  * @author Mayank
@@ -17,15 +19,16 @@ public class ProductDetails extends javax.swing.JFrame {
     /**
      * Creates new form ProductDetails
      */
-    String product = null ,username = null;
+    String product = null, username = null;
     Connection con = null;
     PreparedStatement stat1, stat2;
     ResultSet rs1;
     String url = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;integratedSecurity=true";
-    
-    public ProductDetails(String p,String u) {
+
+    public ProductDetails(String p, String u) {
         product = p;
         username = u;
+        
         initComponents();
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -35,12 +38,12 @@ public class ProductDetails extends javax.swing.JFrame {
             stat1.setString(2, username);
             rs1 = stat1.executeQuery();
             byte[] im = null;
-            while(rs1.next()){
+            while (rs1.next()) {
                 jLabel6.setText(rs1.getString(2));
                 jTextArea1.setText(rs1.getString(3));
                 jLabel7.setText(rs1.getString(4));
                 jLabel8.setText(rs1.getString(5));
-                
+
                 im = rs1.getBytes(6);
                 Image img = Toolkit.getDefaultToolkit().createImage(im);
                 Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), Image.SCALE_SMOOTH);
